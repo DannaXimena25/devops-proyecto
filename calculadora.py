@@ -17,6 +17,3 @@ def dividir(a, b):
 
 def funcion_con_error(  x,y ):
     return x+y
-
-def funcion_con_error(  x,y ):
-    return x+y
