@@ -1,31 +1,43 @@
-steps:
-  - uses: actions/checkout@v4
+name: CI Pipeline
 
-  - uses: actions/setup-python@v5
-    with:
-      python-version: '3.11'
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
-  - name: Cache de dependencias pip
-    uses: actions/cache@v4
-    with:
-      path: ~/.cache/pip
-      key: pip-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
-      restore-keys: |
-        pip-${{ runner.os }}-
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
 
-  - name: Instalar dependencias
-    run: pip install -r requirements.txt
+    steps:
+      - uses: actions/checkout@v4
 
-  - name: Linting
-    run: flake8 . --max-line-length=100
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
-  - name: Tests con coverage
-    run: pytest tests/ -v --tb=short --junitxml=test-results/results.xml
+      - name: Cache de dependencias pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            pip-${{ runner.os }}-
 
-  - name: Publicar resultados de tests
-    uses: actions/upload-artifact@v4
-    if: always()
-    with:
-      name: test-results-${{ github.run_number }}
-      path: test-results/
-      retention-days: 30
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Linting
+        run: flake8 . --max-line-length=100
+
+      - name: Tests con coverage
+        run: pytest tests/ -v --tb=short --junitxml=test-results/results.xml
+
+      - name: Publicar resultados de tests
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-${{ github.run_number }}
+          path: test-results/
+          retention-days: 30
