@@ -15,3 +15,6 @@ def dividir(a, b):
         raise ZeroDivisionError("División por cero no permitida proporciona un número distinto")
     return a / b
 
+
+def funcion_con_error(  x,y ):
+    return x+y
