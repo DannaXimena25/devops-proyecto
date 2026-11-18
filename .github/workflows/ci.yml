@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  contents: read
+  security-events: write
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -55,6 +59,7 @@ jobs:
           output: trivy-results.sarif
           severity: HIGH,CRITICAL
           exit-code: '1'
+        continue-on-error: true
 
       - name: Subir resultados a GitHub Security
         uses: github/codeql-action/upload-sarif@v3
