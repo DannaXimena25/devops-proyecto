@@ -6,13 +6,12 @@ on:
   pull_request:
     branches: [ "main" ]
 
-permissions:
-  contents: read
-  security-events: write
-
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
 
     steps:
       - uses: actions/checkout@v4
@@ -72,4 +71,3 @@ jobs:
         run: |
           echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
           docker push dannaxb/devops-app:${{ github.sha }}
-          
